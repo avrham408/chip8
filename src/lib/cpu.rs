@@ -49,3 +49,4 @@ fn load_rom(file_content: [u8; 4096 - 0x200]) -> [u8; 4096]{
     }
     mem
 }
+

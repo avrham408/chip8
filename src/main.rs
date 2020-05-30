@@ -1,4 +1,4 @@
-use chip8::{cpu, fetch_and_decode};
+use chip8::{cpu, fetch_and_decode, execute};
 use std::process;
 
 fn main() {
@@ -9,5 +9,10 @@ fn main() {
         println!("Loading chip8 file error : {}", e);
         process::exit(1);
     }); // #TODO add support for reading args from std::env:args
+
+
     //loop {} game loop
+    //let code : [u8; 2] = [cpu.memory[514], cpu.memory[515]];
+    //println!("{:?}", fetch_and_decode::fetch(&code));
+    execute::exe(fetch_and_decode::OPCODE::None)
 }
