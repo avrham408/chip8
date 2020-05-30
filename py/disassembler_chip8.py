@@ -1,4 +1,5 @@
 import logging
+import sys
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +14,7 @@ def load_rom(path: str, memory: list) -> int:
 
 def disassembler(code, pc):
     firstnib = code[0] >> 4
-    print("{:04X} {:02X} {:02X}".format(pc, code[0], code[1]))
+    print("{:04X} {:02X} {:02X}".format(pc, code[0], code[1]), end=" ")
     if firstnib == 0x00:
         if code[1] == 0xe0:
             print("{} \t ".format("CLS"))
@@ -59,7 +60,7 @@ def disassembler(code, pc):
         else:
             print("UKNOWN 8 -{}".format(lastnib))
     elif firstnib == 0x09:
-        print("{} \t V{:01X},V{01X}".format("SKIP.NE", code[0] & 0XF, code[1] >> 4))
+        print("{} \t V{:01X},V{:01X}".format("SKIP.NE", code[0] & 0XF, code[1] >> 4))
     elif firstnib == 0x0a:
         address = code[0] & 0x0f
         print("{}\t I,#${:01X}{:02X}".format("MVI", address, code[1]))
@@ -99,15 +100,21 @@ def disassembler(code, pc):
             raise Exception("UKNOWN F")
 
 
-def parse_code(memory: list, size: int,PC: int=0X200):
+def parse_code(memory: list, size: int, PC):
     for _ in range(int(size / 2)):
         code = memory[PC: PC + 2]
-        disassmbler(code, PC)
+        disassembler(code, PC)
         PC += 2
 
 
 def parse_file(file_name):
     memory = [0] * 4096
     PC = 0X200  # program counter
-    size = load_rom(f, memory)
-    parse_code(memory, PC, size)
+    size = load_rom(file_name, memory)
+    parse_code(memory, size, PC)
+
+
+if __name__ == "__main__":
+    file_name = sys.argv[1]
+    parse_file(file_name)
+

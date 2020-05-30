@@ -4,14 +4,14 @@ use std::io::Read;
 
 pub struct Chip8 {
     pub memory: [u8; 4096],
-    pub V: [u8; 16],
-    pub I: u16,
-    pub PC: u16,
-    pub gdc: [u8; 64 * 32],
+    pub V: [u8; 16],  // registers
+    pub I: u16,  //index register
+    pub pc: u16,  // program counter
+    pub gdc: [u8; 64 * 32],  // screen
     pub delay_time: u8,
     pub sound_time: u8,
-    pub stack: [u8; 16],
-    pub sp: u8,
+    pub stack: [u16; 16],
+    pub sp: u8,  //stack pointer
     pub key: [u8; 16]
 }
 
@@ -23,7 +23,7 @@ impl Chip8{
             memory: mem,
             V: [0; 16],
             I: 0,
-            PC: 0x200,
+            pc: 0x200,
             gdc: [0; 64 * 32],
             delay_time: 0,
             sound_time: 0,
@@ -31,6 +31,37 @@ impl Chip8{
             sp: 0,
             key: [0; 16]
         })
+    }
+
+    pub fn next_op(&mut self){
+        self.pc += 2;
+    }
+
+    pub fn set_address(&mut self, adress: u16){
+        if adress < 0x200 || adress > 0xfff{
+            panic!("set program counter address - {} overflow  memory", adress);
+        }
+        self.pc = adress;
+    }
+
+    pub fn push_to_stack(&mut self, pos: u16){
+        if self.sp > 16 {
+            panic!("push to stack over flow!")
+        }
+        self.stack[self.sp as usize] = pos;
+        self.sp += 1;
+    }
+    pub fn pop_from_stack(&mut self) -> u16 {
+        self.sp -= 1;
+        if self.sp < 0{
+            panic!("pop from stack overflow stack is empty!")
+        }
+        let pos = self.stack[self.sp as usize];
+        self.stack[self.sp as usize] = 0;
+        return pos
+    }
+    pub fn set_register(&mut self, v_pointer: usize, val: u8) {
+        self.V[v_pointer] = val;
     }
 }
 
