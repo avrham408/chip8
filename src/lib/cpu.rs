@@ -12,7 +12,7 @@ pub struct Chip8 {
     pub sound_time: u8,
     pub stack: [u16; 16],
     pub sp: u8,  //stack pointer
-    pub key: [u8; 16]
+    pub key: [bool; 16]
 }
 
 impl Chip8{
@@ -29,7 +29,7 @@ impl Chip8{
             sound_time: 0,
             stack: [0; 16],
             sp: 0,
-            key: [0; 16]
+            key: [false; 16]
         })
     }
 
@@ -51,6 +51,7 @@ impl Chip8{
         self.stack[self.sp as usize] = pos;
         self.sp += 1;
     }
+
     pub fn pop_from_stack(&mut self) -> u16 {
         self.sp -= 1;
         if self.sp < 0{
@@ -60,8 +61,36 @@ impl Chip8{
         self.stack[self.sp as usize] = 0;
         return pos
     }
-    pub fn set_register(&mut self, v_pointer: usize, val: u8) {
-        self.V[v_pointer] = val;
+
+    pub fn set_register(&mut self, v_pointer: u8, val: u8) {
+        self.V[v_pointer as usize] = val;
+    }
+
+    pub fn get_register(&mut self, v_pointer: u8) -> u8
+    {
+        self.V[v_pointer as usize]
+    }
+
+    pub fn get_index(&mut self) -> u16{ self.I }
+
+    pub fn set_index(&mut self, val: u16) {
+        self.I = val;
+    }
+    pub fn get_key(&mut self, key_pointer: u8) -> bool {
+        self.key[key_pointer as usize]
+    }
+    pub fn get_delay(&mut self) -> u8 { self.delay_time }
+
+    pub fn set_delay(&mut self, val: u8) { self.delay_time = val }
+
+    pub fn set_sound(&mut self, val: u8) { self.sound_time = val }
+
+    pub fn set_memory(&mut self, pos: u16, val: u8){
+        self.memory[pos as usize] = val
+    }
+
+    pub fn read_memory(&mut self, pos: u16) -> u8{
+        self.memory[pos as usize]
     }
 }
 

@@ -12,7 +12,12 @@ fn main() {
 
 
     //loop {} game loop
-    let code : [u8; 2] = [cpu.memory[514], cpu.memory[515]];
-    //println!("{:?}", fetch_and_decode::fetch(&code));
-    execute::exe(fetch_and_decode::OPCODE::None, &code, &mut cpu)
+    loop {
+        let program_counter = cpu.pc as usize;
+        let code: [u8; 2] = [cpu.memory[program_counter],
+            cpu.memory[program_counter + 1]];
+        println!("{:?}", fetch_and_decode::fetch(&code));
+        let opcode = fetch_and_decode::fetch(&code);
+        execute::exe(opcode, &code, &mut cpu);
+    }
 }

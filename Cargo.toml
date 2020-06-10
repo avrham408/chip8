@@ -10,4 +10,4 @@ name = "chip8"
 path = "src/lib/lib.rs"
 
 [dependencies]
-
+rand = "0.7.3"

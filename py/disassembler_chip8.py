@@ -76,7 +76,8 @@ def disassembler(code, pc):
         elif code[1] == 0xA1:
             print("{} \t V{:01X}".format("SKIPKEY.N", code[0] & 0XF))
         else:
-            raise Exception("UKNOWN E")
+            # raise Exception("UKNOWN E")
+            pass
     elif firstnib == 0x0f:
         if code[1] == 0X07:
             print("{} \t V{:01X}, DELAY".format("MOV", code[0] & 0XF))
@@ -97,7 +98,8 @@ def disassembler(code, pc):
         elif code[1] == 0X65:
             print("{} \t V0-V{:01X},(I)".format("MOVM", code[0] & 0XF))
         else:
-            raise Exception("UKNOWN F")
+            # raise Exception("UKNOWN F")
+            pass
 
 
 def parse_code(memory: list, size: int, PC):
